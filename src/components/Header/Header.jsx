@@ -7,18 +7,18 @@ import "./Header.scss";
 import { ProductsContext } from "../../context/ProductsContext/ProductsState";
 
 const Header = () => {
-  const { token, logout } = useContext(UserContext);
+  const { token, logout,logoutMessage } = useContext(UserContext);
   const { cart } = useContext(ProductsContext);
 
   const navigate = useNavigate();
   useEffect(() => {
-    if (!token) {
+    if (logoutMessage) {
       navigate("/login");
       notification.success({
-        message: "Logout successful",
+        message: logoutMessage,
       });
     }
-  }, [token]);
+  }, [logoutMessage]);
 
   useEffect(() => {
     localStorage.setItem("cart", JSON.stringify(cart));
