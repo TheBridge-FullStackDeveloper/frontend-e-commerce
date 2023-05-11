@@ -1,11 +1,15 @@
 import React, { useContext, useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, json, useNavigate } from "react-router-dom";
 import { UserContext } from "../../context/UserContext/UserState";
-import { Avatar, notification } from "antd";
-import { UserOutlined } from "@ant-design/icons";
+import { Avatar, notification, Badge } from "antd";
+import { UserOutlined, ShoppingCartOutlined } from "@ant-design/icons";
+import "./Header.scss";
+import { ProductsContext } from "../../context/ProductsContext/ProductsState";
 
 const Header = () => {
   const { token, logout } = useContext(UserContext);
+  const { cart } = useContext(ProductsContext);
+
   const navigate = useNavigate();
   useEffect(() => {
     if (!token) {
@@ -15,17 +19,28 @@ const Header = () => {
       });
     }
   }, [token]);
+
+  useEffect(() => {
+    localStorage.setItem("cart", JSON.stringify(cart));
+  }, [cart]);
+
   return (
-    <div>
-      Header
+    <div className="header-container">
+      <h2>Header</h2>
+
       {token ? (
-        <>
+        <div>
+          <Link to="/products">Products</Link>
           <Link to="/profile">
             <Avatar icon={<UserOutlined />} />
-            Profile
+          </Link>
+          <Link to="/cart">
+            <Badge count={cart.length}>
+              <ShoppingCartOutlined />
+            </Badge>
           </Link>
           <span onClick={() => logout()}>Logout</span>
-        </>
+        </div>
       ) : (
         <Link to="/login">Login</Link>
       )}
